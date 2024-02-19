@@ -7,6 +7,8 @@ using TMPro;
 
 public class PlayerScript : MonoBehaviour
 {
+    public GameObject CenterPosition;
+    public Vector3 targetPosition;
 
     public GameObject NorthEntrance;
     public GameObject SouthEntrance;
@@ -14,6 +16,8 @@ public class PlayerScript : MonoBehaviour
     public GameObject WestEntrance;
 
     public float speed = 0;
+    public float SlowSpeed = 0;
+    
 
     private Rigidbody rb;
     private int count;
@@ -23,32 +27,44 @@ public class PlayerScript : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        targetPosition = CenterPosition.transform.position;
+        
 
         CheckPosition();
-
     }
 
     private void OnTriggerEnter(Collider other)
     {
         print("Secret Number = " + MySingleton.secretNumber);
         MySingleton.secretNumber = 5;
-        EditorSceneManager.LoadScene("Scene2");
        
         if (other.gameObject.CompareTag("North"))
         {
+            EditorSceneManager.LoadScene("Dungeon1");
             MySingleton.North = true;
+            MySingleton.Middle = true;
         }
         if (other.gameObject.CompareTag("South"))
         {
+            EditorSceneManager.LoadScene("Dungeon1");
             MySingleton.South = true;
+            MySingleton.Middle = true;
         }
         if (other.gameObject.CompareTag("East"))
         {
+            EditorSceneManager.LoadScene("Dungeon1");
             MySingleton.East = true;
+            MySingleton.Middle = true;
         }
         if (other.gameObject.CompareTag("West"))
         {
+            EditorSceneManager.LoadScene("Dungeon1");
             MySingleton.West = true;
+            MySingleton.Middle = true;
+        }
+        if(other.gameObject.CompareTag("Center"))
+        {
+            MySingleton.Middle = false;
         }
     }
 
@@ -62,20 +78,20 @@ public class PlayerScript : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-       
+        
     }
     // Update is called once per frame
 
     void FixedUpdate()
     {
+        if (MySingleton.Middle == true)
+        {
+            MoveToCenter();
+        }
+
         Vector3 movement = new Vector3(movementX, 0.0f, movementY);
 
         rb.AddForce(movement * speed);
-    }
-
-    void Update()
-    {
-        
     }
 
     void CheckPosition()
@@ -84,21 +100,30 @@ public class PlayerScript : MonoBehaviour
         {
             this.gameObject.transform.position = SouthEntrance.gameObject.transform.position;
             MySingleton.North = false;
+           
         }
         if (MySingleton.South == true)
         {
             this.gameObject.transform.position = NorthEntrance.gameObject.transform.position;
             MySingleton.South = false;
+            
         }
         if (MySingleton.East == true)
         {
             this.gameObject.transform.position = WestEntrance.gameObject.transform.position;
             MySingleton.East = false;
+          
         }
         if (MySingleton.West == true)
         {
             this.gameObject.transform.position = EastEntrance.gameObject.transform.position;
             MySingleton.West = false;
+          
         }
+    }
+
+    void MoveToCenter()
+    {
+         this.gameObject.transform.position = Vector3.MoveTowards(this.gameObject.transform.position, targetPosition, 1);
     }
 }

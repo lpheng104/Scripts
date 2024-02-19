@@ -10,4 +10,5 @@ public class MySingleton
     public static bool South = false;
     public static bool West = false;
     public static bool East = false;
+    public static bool Middle = false;
 }
