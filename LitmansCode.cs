@@ -115,35 +115,33 @@ public class LitmansCode : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        NumExits = randomNumber;
-        print(other.tag);
         if (other.CompareTag("door"))
         {
-            print("Loading scene");
-
-            EditorSceneManager.LoadScene("Dungeon1");
+            LoadPreviousRoom();
         }
         else if (other.CompareTag("middleOfTheRoom") && !LitmansSingleton.currentDirection.Equals("?"))
         {
-            //we have hit the middle of the room, so lets turn off the collider
-            //until the next run of the scene to avoid additional collisions
             this.middleOfTheRoom.SetActive(false);
             this.turnOnExits();
-
-            print("middle");
             this.amAtMiddleOfRoom = true;
             this.amMoving = false;
             LitmansSingleton.currentDirection = "middle";
         }
         else
         {
-            print("spomethilskdfjskldjfsdjkl");
+            print("Unexpected collision");
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void LoadPreviousRoom()
     {
+        LitmansSingleton.theCurrentRoom = LitmansSingleton.GetPreviousRoom();
+        EditorSceneManager.LoadScene("Dungeon1");
+    }
+// Update is called once per frame
+void Update()
+    {
+        /*
         if (NumExits == 1)
         {
             this.northExitBlocker.gameObject.SetActive(true);
@@ -170,13 +168,13 @@ public class LitmansCode : MonoBehaviour
 
         if (NumExits == 4)
         {
-            this.northExitBlocker.gameObject.SetActive(true);
+            this.northExitBlocker.gameObject.SetActive(true);   
             this.southExitBlocker.gameObject.SetActive(true);
             this.eastExitBlocker.gameObject.SetActive(true);
             this.westExitBlocker.gameObject.SetActive(true);
-        }
+        } */
 
-        if (Input.GetKeyUp(KeyCode.UpArrow) && !this.amMoving)
+        if (Input.GetKeyUp(KeyCode.UpArrow) && !this.amMoving && LitmansSingleton.theCurrentRoom.isOpenDoor("north"))
         {
             this.amMoving = true;
             this.turnOnExits();
@@ -184,7 +182,7 @@ public class LitmansCode : MonoBehaviour
             this.gameObject.transform.LookAt(this.northExit.transform.position);
         }
 
-        if (Input.GetKeyUp(KeyCode.DownArrow) && !this.amMoving)
+        if (Input.GetKeyUp(KeyCode.DownArrow) && !this.amMoving && LitmansSingleton.theCurrentRoom.isOpenDoor("south"))
         {
             this.amMoving = true;
             this.turnOnExits();
@@ -192,7 +190,7 @@ public class LitmansCode : MonoBehaviour
             this.gameObject.transform.LookAt(this.southExit.transform.position);
         }
 
-        if (Input.GetKeyUp(KeyCode.LeftArrow) && !this.amMoving)
+        if (Input.GetKeyUp(KeyCode.LeftArrow) && !this.amMoving && LitmansSingleton.theCurrentRoom.isOpenDoor("west"))
         {
             this.amMoving = true;
             this.turnOnExits();
@@ -200,7 +198,7 @@ public class LitmansCode : MonoBehaviour
             this.gameObject.transform.LookAt(this.westExit.transform.position);
         }
 
-        if (Input.GetKeyUp(KeyCode.RightArrow) && !this.amMoving)
+        if (Input.GetKeyUp(KeyCode.RightArrow) && !this.amMoving && LitmansSingleton.theCurrentRoom.isOpenDoor("east"))
         {
             this.amMoving = true;
             this.turnOnExits();

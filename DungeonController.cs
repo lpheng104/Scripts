@@ -4,16 +4,47 @@ using UnityEngine;
 
 public class DungeonController : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public GameObject[] closedDoors;
+
     void Start()
     {
-        Room r = new Room("a room");
-        LitmansSingleton.addRoom(r);
+        if (LitmansSingleton.theCurrentRoom == null)
+        {
+            GenerateRandomRoom();
+        }
+        else
+        {
+            LoadRoom(LitmansSingleton.theCurrentRoom);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void GenerateRandomRoom()
     {
-        
+        int openDoorIndex = Random.Range(0, 4);
+        this.closedDoors[openDoorIndex].SetActive(false);
+
+        LitmansSingleton.theCurrentRoom = new Room("a room");
+        LitmansSingleton.addRoom(LitmansSingleton.theCurrentRoom);
+        LitmansSingleton.theCurrentRoom.AddOpenDoor(LitmansSingleton.MapIndexToStringForExit(openDoorIndex));
+
+        for (int i = 0; i < 4; i++)
+        {
+            if (openDoorIndex != i && Random.Range(0, 2) == 1)
+            {
+                this.closedDoors[i].SetActive(false);
+                LitmansSingleton.theCurrentRoom.AddOpenDoor(LitmansSingleton.MapIndexToStringForExit(i));
+            }
+        }
+    }
+
+    private void LoadRoom(Room room)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            if (room.isOpenDoor(LitmansSingleton.MapIndexToStringForExit(i)))
+            {
+                this.closedDoors[i].SetActive(false);
+            }
+        }
     }
 }
