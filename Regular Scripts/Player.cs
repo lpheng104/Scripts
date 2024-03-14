@@ -1,31 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class Player
 {
     private string name;
-    private int hp;
+    private Room currentRoom;
 
     public Player(string name)
     {
-        this.hp = (int)Random.Range(10.0f, 20.0f);
         this.name = name;
+        this.currentRoom = null;
     }
 
-    public void display()
+    public Room GetCurrentRoom()
     {
-        Debug.Log(this.name + " -> HP: " + this.hp);
+        return currentRoom;
     }
 
-    public string Name
+    public void SetCurrentRoom(Room r)
     {
-        get { return name; }
+        currentRoom = r;
     }
 
-    public int HP
+    public void LeaveRoom()
     {
-        get { return hp; }
+        currentRoom = null;
     }
 }

@@ -4,12 +4,34 @@ using UnityEngine;
 
 public class MySingleton
 {
-    public static int secretNumber = -1;
+    public static string currentDirection = "?";
+    public static Player thePlayer;
+    public static Dungeon theDungeon = GenerateDungeon();
 
-    public static bool North = false;
-    public static bool South = false;
-    public static bool West = false;
-    public static bool East = false;
-    public static bool Middle = false;
+    private static Dungeon GenerateDungeon()
+    {
+        Room r1 = new Room("R1");
+        Room r2 = new Room("R2");
+        Room r3 = new Room("R3");
+        Room r4 = new Room("R4");
+        Room r5 = new Room("R5");
+        Room r6 = new Room("R6");
 
+        r1.AddExit("north", r2);
+        r2.AddExit("south", r1);
+        r2.AddExit("north", r3);
+        r3.AddExit("south", r2);
+        r3.AddExit("west", r4);
+        r3.AddExit("north", r6);
+        r3.AddExit("east", r5);
+        r4.AddExit("east", r3);
+        r5.AddExit("west", r3);
+        r6.AddExit("south", r3);
+
+        Dungeon theDungeon = new Dungeon("the cross");
+        theDungeon.SetStartRoom(r1);
+        thePlayer = new Player("Mike");
+        theDungeon.AddPlayer(thePlayer);
+        return theDungeon;
+    }
 }

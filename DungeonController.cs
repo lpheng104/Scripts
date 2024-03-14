@@ -4,47 +4,36 @@ using UnityEngine;
 
 public class DungeonController : MonoBehaviour
 {
-    public GameObject[] closedDoors;
+    public GameObject northDoor;
+    public GameObject southDoor;
+    public GameObject eastDoor;
+    public GameObject westDoor;
 
-    void Start()
+    private void Start()
     {
-        if (LitmansSingleton.theCurrentRoom == null)
+        if (MySingleton.thePlayer != null)
         {
-            GenerateRandomRoom();
+            Room currentRoom = MySingleton.thePlayer.GetCurrentRoom();
+            ActivateDoor(currentRoom.HasExit("north"), northDoor);
+            ActivateDoor(currentRoom.HasExit("south"), southDoor);
+            ActivateDoor(currentRoom.HasExit("east"), eastDoor);
+            ActivateDoor(currentRoom.HasExit("west"), westDoor);
         }
         else
         {
-            LoadRoom(LitmansSingleton.theCurrentRoom);
+            Debug.LogWarning("Player not found in the dungeon.");
         }
     }
 
-    private void GenerateRandomRoom()
+    private void ActivateDoor(bool hasExit, GameObject door)
     {
-        int openDoorIndex = Random.Range(0, 4);
-        this.closedDoors[openDoorIndex].SetActive(false);
-
-        LitmansSingleton.theCurrentRoom = new Room("a room");
-        LitmansSingleton.addRoom(LitmansSingleton.theCurrentRoom);
-        LitmansSingleton.theCurrentRoom.AddOpenDoor(LitmansSingleton.MapIndexToStringForExit(openDoorIndex));
-
-        for (int i = 0; i < 4; i++)
+        if (door != null)
         {
-            if (openDoorIndex != i && Random.Range(0, 2) == 1)
-            {
-                this.closedDoors[i].SetActive(false);
-                LitmansSingleton.theCurrentRoom.AddOpenDoor(LitmansSingleton.MapIndexToStringForExit(i));
-            }
+            door.SetActive(!hasExit);
         }
-    }
-
-    private void LoadRoom(Room room)
-    {
-        for (int i = 0; i < 4; i++)
+        else
         {
-            if (room.isOpenDoor(LitmansSingleton.MapIndexToStringForExit(i)))
-            {
-                this.closedDoors[i].SetActive(false);
-            }
+            Debug.LogWarning("Door GameObject is not assigned.");
         }
     }
 }
