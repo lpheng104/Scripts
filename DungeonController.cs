@@ -4,36 +4,35 @@ using UnityEngine;
 
 public class DungeonController : MonoBehaviour
 {
-    public GameObject northDoor;
-    public GameObject southDoor;
-    public GameObject eastDoor;
-    public GameObject westDoor;
+    public GameObject northDoor, southDoor, eastDoor, westDoor;
 
-    private void Start()
+    void Start()
     {
-        if (MySingleton.thePlayer != null)
+        Room theCurrentRoom = MySingleton.thePlayer.getCurrentRoom();
+        if (theCurrentRoom.hasExit("north"))
         {
-            Room currentRoom = MySingleton.thePlayer.GetCurrentRoom();
-            ActivateDoor(currentRoom.HasExit("north"), northDoor);
-            ActivateDoor(currentRoom.HasExit("south"), southDoor);
-            ActivateDoor(currentRoom.HasExit("east"), eastDoor);
-            ActivateDoor(currentRoom.HasExit("west"), westDoor);
+            this.northDoor.SetActive(false);
         }
-        else
+
+        if (theCurrentRoom.hasExit("south"))
         {
-            Debug.LogWarning("Player not found in the dungeon.");
+            this.southDoor.SetActive(false);
+        }
+
+        if (theCurrentRoom.hasExit("east"))
+        {
+            this.eastDoor.SetActive(false);
+        }
+
+        if (theCurrentRoom.hasExit("west"))
+        {
+            this.westDoor.SetActive(false);
         }
     }
 
-    private void ActivateDoor(bool hasExit, GameObject door)
+    // Update is called once per frame
+    void Update()
     {
-        if (door != null)
-        {
-            door.SetActive(!hasExit);
-        }
-        else
-        {
-            Debug.LogWarning("Door GameObject is not assigned.");
-        }
+
     }
 }

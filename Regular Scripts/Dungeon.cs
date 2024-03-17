@@ -6,6 +6,7 @@ public class Dungeon
 {
     private string name;
     private Room startRoom;
+    private Room currentRoom;
     private Player thePlayer;
 
     public Dungeon(string name)
@@ -13,14 +14,14 @@ public class Dungeon
         this.name = name;
     }
 
-    public void SetStartRoom(Room r)
+    public void setStartRoom(Room r)
     {
-        startRoom = r;
+        this.startRoom = r;
     }
 
-    public void AddPlayer(Player thePlayer)
+    public void addPlayer(Player thePlayer)
     {
         this.thePlayer = thePlayer;
-        startRoom.AddPlayer(thePlayer);
+        this.startRoom.addPlayer(this.thePlayer);
     }
 }

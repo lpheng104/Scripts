@@ -6,9 +6,10 @@ public class MySingleton
 {
     public static string currentDirection = "?";
     public static Player thePlayer;
-    public static Dungeon theDungeon = GenerateDungeon();
+    public static Dungeon theDungeon = MySingleton.generateDungeon();
+    public static int PelletCount = 0;
 
-    private static Dungeon GenerateDungeon()
+    private static Dungeon generateDungeon()
     {
         Room r1 = new Room("R1");
         Room r2 = new Room("R2");
@@ -17,21 +18,21 @@ public class MySingleton
         Room r5 = new Room("R5");
         Room r6 = new Room("R6");
 
-        r1.AddExit("north", r2);
-        r2.AddExit("south", r1);
-        r2.AddExit("north", r3);
-        r3.AddExit("south", r2);
-        r3.AddExit("west", r4);
-        r3.AddExit("north", r6);
-        r3.AddExit("east", r5);
-        r4.AddExit("east", r3);
-        r5.AddExit("west", r3);
-        r6.AddExit("south", r3);
+        r1.addExit("north", r2);
+        r2.addExit("south", r1);
+        r2.addExit("north", r3);
+        r3.addExit("south", r2);
+        r3.addExit("west", r4);
+        r3.addExit("north", r6);
+        r3.addExit("east", r5);
+        r4.addExit("east", r3);
+        r5.addExit("west", r3);
+        r6.addExit("south", r3);
 
         Dungeon theDungeon = new Dungeon("the cross");
-        theDungeon.SetStartRoom(r1);
-        thePlayer = new Player("Mike");
-        theDungeon.AddPlayer(thePlayer);
+        theDungeon.setStartRoom(r1);
+        MySingleton.thePlayer = new Player("Mike");
+        theDungeon.addPlayer(MySingleton.thePlayer);
         return theDungeon;
     }
 }

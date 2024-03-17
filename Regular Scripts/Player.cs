@@ -13,18 +13,13 @@ public class Player
         this.currentRoom = null;
     }
 
-    public Room GetCurrentRoom()
+    public Room getCurrentRoom()
     {
-        return currentRoom;
+        return this.currentRoom;
     }
 
-    public void SetCurrentRoom(Room r)
+    public void setCurrentRoom(Room r)
     {
-        currentRoom = r;
-    }
-
-    public void LeaveRoom()
-    {
-        currentRoom = null;
+        this.currentRoom = r;
     }
 }

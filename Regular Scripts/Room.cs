@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor.SceneManagement;
 
 public class Room
 {
     private string name;
+
     private Exit[] theExits = new Exit[4];
     private int howManyExits = 0;
     private Player currentPlayer;
@@ -16,17 +16,39 @@ public class Room
         this.currentPlayer = null;
     }
 
-    public void AddPlayer(Player thePlayer)
+    public void addPlayer(Player thePlayer)
     {
         this.currentPlayer = thePlayer;
-        this.currentPlayer.SetCurrentRoom(this);
+        this.currentPlayer.setCurrentRoom(this); //this updates the player to their new current room
     }
 
-    public bool HasExit(string direction)
+    //remove the current player from this room
+    public void removePlayer(string direction)
     {
-        for (int i = 0; i < howManyExits; i++)
+        Exit theExit = this.getExitGivenDirection(direction);
+        Room destinationRoom = theExit.getDestinationRoom();
+        destinationRoom.addPlayer(this.currentPlayer);
+        this.currentPlayer = null; //finally remove the player that just left from this room
+
+    }
+
+    private Exit getExitGivenDirection(string direction)
+    {
+        for (int i = 0; i < this.howManyExits; i++)
         {
-            if (theExits[i].GetDirection().Equals(direction))
+            if (this.theExits[i].getDirection().Equals(direction))
+            {
+                return this.theExits[i]; //returns the exit in the given direction
+            }
+        }
+        return null; //never found the exit
+    }
+
+    public bool hasExit(string direction)
+    {
+        for (int i = 0; i < this.howManyExits; i++)
+        {
+            if (this.theExits[i].getDirection().Equals(direction))
             {
                 return true;
             }
@@ -34,13 +56,13 @@ public class Room
         return false;
     }
 
-    public void AddExit(string direction, Room destinationRoom)
+    public void addExit(string direction, Room destinationRoom)
     {
-        if (howManyExits < theExits.Length)
+        if (this.howManyExits < this.theExits.Length)
         {
             Exit e = new Exit(direction, destinationRoom);
-            theExits[howManyExits] = e;
-            howManyExits++;
+            this.theExits[this.howManyExits] = e;
+            this.howManyExits++;
         }
     }
 }
