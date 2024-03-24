@@ -2,12 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor.SceneManagement;
-using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
-    public TextMeshProUGUI countText;
-
     public GameObject northExit;
     public GameObject southExit;
     public GameObject eastExit;
@@ -41,7 +38,6 @@ public class PlayerController : MonoBehaviour
 
         //disable all exits when the scene first loads
         this.turnOffExits();
-        this.SetCountText();
 
         //disable the middle collider until we know what our initial state will be
         //it should already be disabled by default, but for clarity, lets do it here
@@ -116,14 +112,23 @@ public class PlayerController : MonoBehaviour
         }
         else if (other.CompareTag("power-pellet"))
         {
-            other.gameObject.SetActive(false); //make pellet disappear\
-            MySingleton.PelletCount = MySingleton.PelletCount + 1;
-            SetCountText();
+            other.gameObject.SetActive(false); //visually make pellet disappear
+
+            //programatically  make sure the pellet doesnt show up again
+            Room theCurrentRoom = MySingleton.thePlayer.getCurrentRoom();
+            theCurrentRoom.removePellet(other.GetComponent<pelletController>().direction);
+            EditorSceneManager.LoadScene("CombatScene");
+
+
+
+
+
         }
         else if (other.CompareTag("middleOfTheRoom") && !MySingleton.currentDirection.Equals("?"))
         {
             //we have hit the middle of the room, so lets turn off the collider
             //until the next run of the scene to avoid additional collisions
+
             this.middleOfTheRoom.SetActive(false);
             this.turnOnExits();
 
@@ -137,14 +142,6 @@ public class PlayerController : MonoBehaviour
             print("spomethilskdfjskldjfsdjkl");
         }
     }
-
-    void SetCountText()
-    {
-        countText.text = "Count: " + MySingleton.PelletCount;
-
-    }
-
-
 
     // Update is called once per frame
     void Update()
