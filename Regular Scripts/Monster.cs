@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : Inhabitant
+public class Monster : Inhabitant
 {
-    public Player(string name) : base(name)
+    public Monster(string name) : base(name)
     {
 
     }
