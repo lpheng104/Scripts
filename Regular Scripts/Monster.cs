@@ -8,4 +8,5 @@ public class Monster : Inhabitant
     {
 
     }
+
 }

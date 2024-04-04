@@ -112,13 +112,13 @@ public class PlayerController : MonoBehaviour
         }
         else if (other.CompareTag("power-pellet"))
         {
+            EditorSceneManager.LoadScene("FightScene");
+
             other.gameObject.SetActive(false); //visually make pellet disappear
 
             //programatically  make sure the pellet doesnt show up again
             Room theCurrentRoom = MySingleton.thePlayer.getCurrentRoom();
-            theCurrentRoom.removePellet(other.GetComponent<pelletController>().direction);
-            EditorSceneManager.LoadScene("CombatScene");
-
+            theCurrentRoom.removePellet(other.GetComponent<pelletController>().direction); //this is our code to fix the pellet...add ; to end of this line for error to go away
 
 
 
