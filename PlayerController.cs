@@ -112,7 +112,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (other.CompareTag("power-pellet"))
         {
-            EditorSceneManager.LoadScene("FightScene");
+            EditorSceneManager.LoadScene("CombatScene");
 
             other.gameObject.SetActive(false); //visually make pellet disappear
 

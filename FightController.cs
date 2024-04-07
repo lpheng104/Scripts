@@ -2,23 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEditor.SceneManagement;
+
 
 public class fightController : MonoBehaviour
 {
     public GameObject hero_GO, monster_GO;
-    public TextMeshProUGUI hero_hp_TMP, monster_hp_TMP, fightManager;
+    public TextMeshProUGUI hero_hp_TMP, monster_hp_TMP;
     private GameObject currentAttacker;
-    //private Animator theCurrentAnimator;
+    private Animator theCurrentAnimator;
     private Monster theMonster;
     private bool shouldAttack = true;
+    //private AudioSource attackSound;
+    public TextMeshProUGUI fightCommentaryTMP;
 
     // Start is called before the first frame update
     void Start()
     {
+        this.fightCommentaryTMP.text = "";
+        //this.attackSound = this.gameObject.GetComponent<AudioSource>();
         this.theMonster = new Monster("Pink Ghost");
         this.hero_hp_TMP.text = "Current HP: " + MySingleton.thePlayer.getHP() + " AC: " + MySingleton.thePlayer.getAC();
         this.monster_hp_TMP.text = "Current HP: " + this.theMonster.getHP() + " AC: " + this.theMonster.getAC();
-        this.fightManager.text = "Round 1";
 
         int num = Random.Range(0, 2); //coin flip, will produce 0 and 1 (since 2 is not included)
         if (num == 0)
@@ -35,31 +40,32 @@ public class fightController : MonoBehaviour
 
     private void tryAttack(Inhabitant attacker, Inhabitant defender)
     {
+        this.fightCommentaryTMP.text = "";
         //have attacker try to attack the defender
         int attackRoll = Random.Range(0, 20) + 1;
         if (attackRoll >= defender.getAC())
         {
             //attacker will hit the defender, lets see how hard!!!!
             int damageRoll = Random.Range(0, 4) + 2; //damage between 2 and 5
+            this.fightCommentaryTMP.color = Color.red;
+            this.fightCommentaryTMP.text = "Attack hits for " + damageRoll;
             defender.takeDamage(damageRoll);
-            this.fightManager.text = attacker + "'s strike hits " + defender + " for " + damageRoll + " Damage!!!!";
-
+            //this.attackSound.Play();
         }
         else
         {
-            print("Attacker Misses!!!!");
-            this.fightManager.text = attacker + "'s Attack Misses!!!";
-            
+            this.fightCommentaryTMP.color = Color.blue;
+            this.fightCommentaryTMP.text = "Attack Misses!!!";
         }
     }
 
     IEnumerator fight()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
         if (this.shouldAttack)
         {
-           // this.theCurrentAnimator = this.currentAttacker.GetComponent<Animator>();
-           // this.theCurrentAnimator.SetTrigger("attack");
+            this.theCurrentAnimator = this.currentAttacker.GetComponent<Animator>();
+            this.theCurrentAnimator.SetTrigger("attack");
             if (this.currentAttacker == this.hero_GO)
             {
                 this.currentAttacker = this.monster_GO;
@@ -69,8 +75,10 @@ public class fightController : MonoBehaviour
                 //now the defender may have fewer hp...check if their are dead?
                 if (this.theMonster.getHP() <= 0)
                 {
-                    this.fightManager.text = "ENEMY FELLED";
+                    this.monster_GO.transform.Rotate(-90, 0, 0);
+                    this.fightCommentaryTMP.text = "Hero Wins!!!";
                     this.shouldAttack = false;
+                    MySingleton.PelletCounter = MySingleton.PelletCounter + 1;
                 }
                 else
                 {
@@ -87,8 +95,12 @@ public class fightController : MonoBehaviour
                 //now the defender may have fewer hp...check if their are dead?
                 if (MySingleton.thePlayer.getHP() <= 0)
                 {
-                    this.fightManager.text = "YOU DIED";
+                    this.hero_GO.transform.Rotate(-90, 0, 0);
+                    this.fightCommentaryTMP.text = "Monster Wins!!!!!";
                     this.shouldAttack = false;
+
+                    EditorSceneManager.LoadScene("Dungeon1");
+
                 }
                 else
                 {
