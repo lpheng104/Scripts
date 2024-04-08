@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor.SceneManagement;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class PlayerController : MonoBehaviour
     private float speed = 5.0f;
     private bool amMoving = false;
     private bool amAtMiddleOfRoom = false;
+    public TextMeshProUGUI PelletDisplay;   
 
     private void turnOffExits()
     {
@@ -35,7 +37,8 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         //Rigidbody rb = this.gameObject.GetComponent<Rigidbody>();
-
+        this.PelletDisplay.text = "Pellets: " + MySingleton.PelletCounter;
+       
         //disable all exits when the scene first loads
         this.turnOffExits();
 
@@ -136,6 +139,12 @@ public class PlayerController : MonoBehaviour
             this.amAtMiddleOfRoom = true;
             this.amMoving = false;
             MySingleton.currentDirection = "middle";
+        }
+        else if (other.CompareTag("shop"))
+        {
+            other.gameObject.SetActive(false);
+            EditorSceneManager.LoadScene("shopKeeperScene");
+           
         }
         else
         {

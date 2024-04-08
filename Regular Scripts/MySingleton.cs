@@ -8,6 +8,7 @@ public class MySingleton
     public static Player thePlayer;
     public static Dungeon theDungeon = MySingleton.generateDungeon();
     public static int PelletCounter = 0;
+    public static int attackBonus = 0;
 
     public static string flipDirection(string direction)
     {

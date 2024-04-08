@@ -7,6 +7,7 @@ using UnityEditor.SceneManagement;
 
 public class fightController : MonoBehaviour
 {
+    private bool isFightOver = false;
     public GameObject hero_GO, monster_GO;
     public TextMeshProUGUI hero_hp_TMP, monster_hp_TMP;
     private GameObject currentAttacker;
@@ -46,7 +47,7 @@ public class fightController : MonoBehaviour
         if (attackRoll >= defender.getAC())
         {
             //attacker will hit the defender, lets see how hard!!!!
-            int damageRoll = Random.Range(0, 4) + 2; //damage between 2 and 5
+            int damageRoll = Random.Range(0, 4) + 2 + MySingleton.attackBonus; //damage between 2 and 5
             this.fightCommentaryTMP.color = Color.red;
             this.fightCommentaryTMP.text = "Attack hits for " + damageRoll;
             defender.takeDamage(damageRoll);
@@ -79,6 +80,7 @@ public class fightController : MonoBehaviour
                     this.fightCommentaryTMP.text = "Hero Wins!!!";
                     this.shouldAttack = false;
                     MySingleton.PelletCounter = MySingleton.PelletCounter + 1;
+                    this.isFightOver = true;
                 }
                 else
                 {
@@ -98,8 +100,7 @@ public class fightController : MonoBehaviour
                     this.hero_GO.transform.Rotate(-90, 0, 0);
                     this.fightCommentaryTMP.text = "Monster Wins!!!!!";
                     this.shouldAttack = false;
-
-                    EditorSceneManager.LoadScene("Dungeon1");
+                    this.isFightOver = true;
 
                 }
                 else
@@ -114,6 +115,10 @@ public class fightController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if(isFightOver && Input.GetKeyUp(KeyCode.Space))
+        {
+            MySingleton.thePlayer.resetStats();
+            EditorSceneManager.LoadScene("Dungeon1");   
+        }
     }
 }
