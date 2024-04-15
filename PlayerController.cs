@@ -140,12 +140,12 @@ public class PlayerController : MonoBehaviour
             this.amMoving = false;
             MySingleton.currentDirection = "middle";
         }
-        else if (other.CompareTag("shop"))
+        /*else if (other.CompareTag("shop"))
         {
             other.gameObject.SetActive(false);
             EditorSceneManager.LoadScene("shopKeeperScene");
            
-        }
+        }*/
         else
         {
             print("spomethilskdfjskldjfsdjkl");
@@ -207,6 +207,13 @@ public class PlayerController : MonoBehaviour
         if (MySingleton.currentDirection.Equals("east"))
         {
             this.gameObject.transform.position = Vector3.MoveTowards(this.gameObject.transform.position, this.eastExit.transform.position, this.speed * Time.deltaTime);
+        }
+
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            EditorSceneManager.LoadScene("shopKeeperScene");
+
+
         }
     }
 }
